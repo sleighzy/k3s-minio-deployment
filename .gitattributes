@@ -1,1 +1,2 @@
 *.yaml linguist-detectable
+*.json linguist-detectable
