@@ -15,7 +15,7 @@ deploying MinIO into a K3s cluster.
 
 ## K3s Deployment
 
-[k3s] is a lightweight, certified Kubernetes distribution, for production
+[K3s] is a lightweight, certified Kubernetes distribution, for production
 workloads from Rancher Labs. I run K3s on my Raspberry Pi cluster, into which
 MinIO has been deployed. See [raspberry-pi-k3s-homelab] for more information on
 this.
@@ -129,8 +129,8 @@ file.
 
 ## Users and Groups
 
-<https://docs.min.io/docs/minio-admin-complete-guide.html#user>
-<https://docs.min.io/docs/minio-admin-complete-guide.html#group>
+- <https://docs.min.io/docs/minio-admin-complete-guide.html#user>
+- <https://docs.min.io/docs/minio-admin-complete-guide.html#group>
 
 ```sh
 $ mc admin user add homelab
@@ -153,8 +153,8 @@ MemberOf: users
 MinIO can be configured with policies to only allow users access to directories
 within a bucket based on their username.
 
-<https://docs.min.io/docs/minio-admin-complete-guide.html#policy>
-<https://docs.min.io/docs/minio-multi-user-quickstart-guide.html>
+- <https://docs.min.io/docs/minio-admin-complete-guide.html#policy>
+- <https://docs.min.io/docs/minio-multi-user-quickstart-guide.html>
 
 The below policy will mean that the previously created `my-home-user` will only
 be able to perform operations within the `my-home-user` prefix of the `users`
@@ -353,6 +353,7 @@ aws:
 [external hard drive for persistent storage]:
   https://github.com/sleighzy/raspberry-pi-k3s-homelab/blob/main/k3s.md#external-hard-drive-for-persistent-storage
 [grafana loki]: https://grafana.com/oss/loki/
+[k3s]: https://k3s.io/
 [keycloak]: https://www.keycloak.org/
 [local path provisioner]: https://rancher.com/docs/k3s/latest/en/storage/
 [minio]: https://min.io/
