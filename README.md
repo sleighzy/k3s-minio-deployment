@@ -349,6 +349,10 @@ aws:
 
 <https://github.com/grafana/loki/issues/1434>
 
+## License
+
+[![MIT license]](https://lbesson.mit-license.org/)
+
 [docker registry]: https://docs.docker.com/registry/
 [external hard drive for persistent storage]:
   https://github.com/sleighzy/raspberry-pi-k3s-homelab/blob/main/k3s.md#external-hard-drive-for-persistent-storage
@@ -358,6 +362,7 @@ aws:
 [local path provisioner]: https://rancher.com/docs/k3s/latest/en/storage/
 [minio]: https://min.io/
 [minio client (mc)]: https://docs.min.io/docs/minio-client-complete-guide.html
+[mit license]: https://img.shields.io/badge/License-MIT-blue.svg
 [raspberry-pi-k3s-homelab]:
   https://github.com/sleighzy/raspberry-pi-k3s-homelab/blob/main/k3s.md
 [restic]: https://restic.net/
