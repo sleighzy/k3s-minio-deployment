@@ -14,5 +14,10 @@ spec:
       services:
         - name: minio
           port: 9000
+    - match: Host(`console.minio.example.com`)
+      kind: Rule
+      services:
+        - name: minio
+          port: 9001
   tls:
-    certResolver: godaddy
+    certResolver: tlsresolver

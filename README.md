@@ -13,6 +13,13 @@ My uses of this include:
 This repository contains instructions and Kubernetes manifest files for
 deploying MinIO into a K3s cluster.
 
+**UPDATE: 7 Nov 2021**: This repository has been upgraded to
+RELEASE.2021-10-27T16-29-42Z from MinIO RELEASE.2020-10-28T08-16-50Z-arm64.
+There have been a number of changes between versions so check the release notes
+for more information if you are upgrading. The configuration and instructions
+from this repository for the previous release are still available from the
+[v1.0.0 tag].
+
 ## K3s Deployment
 
 [K3s] is a lightweight, certified Kubernetes distribution, for production
@@ -20,12 +27,14 @@ workloads from Rancher Labs. I run K3s on my Raspberry Pi cluster, into which
 MinIO has been deployed. See [raspberry-pi-k3s-homelab] for more information on
 this.
 
-### Create Access Key and Secret Key
+### Create Root User and Password
 
-The access key and secret key are used as the username and password when
-accessing MinIO. I have used a similar format as the AWS secret key and secret
-access key, which also highlighted a couple of gotchas with the S3 url format
-when integrating some apps with this.
+The username and password of the root user need to be created as secrets and
+provided as environment variables. I have used a similar format as the AWS
+secret key and secret access key, as this was the pattern used for earlier MinIO
+naming conventions. This highlighted a couple of gotchas with the S3 url format
+when integrating some apps with this, which I have documented in this README.md
+file.
 
 These need to be in base64 format as they will be added to the
 `200-secrets.yaml` file to be created as secrets in Kubernetes.
@@ -62,6 +71,27 @@ affinity:
                 - hdd
 ```
 
+### Ingress Route
+
+My K3s cluster uses [Traefik v2] as the Kubernetes ingress controller and the
+`IngressRoute` resource it provides. You can just as easily use the standard
+Kubernetes `Ingress` resource, or other such ingress controller annotations or
+configuration methods.
+
+The `500-ingressroute.yaml` file specifies the usage of TLS and associated
+certificate resolver. You should always use HTTPS when accessing resources,
+especially over the internet. You can update that file as necessary to work with
+your deployment, e.g. using a different Traefik endpoint and removing the `tls`
+section. In this example `tlsresolver` is a certificate resolver configured in
+Traefik to use Let's Encrypt and the `tlsChallenge` type.
+
+Note that there is a `console.minio.example.com` entry as well as a
+`minio.example.com`. When accessing MinIO via the browser using
+<https://minio.example.com> you will be automatically redirected to the MinIO
+Console at <https://console.minio.example.com>. The MinIO Console is used for
+both administering the system, as well as standard user access when navigating
+buckets.
+
 ### OpenID Connect and Keycloak
 
 MinIO supports authentication using OpenID Connect and providers such as
@@ -74,6 +104,8 @@ variables can be removed from the `400-deployment.yaml` file.
   value: https://keycloak.example.com/auth/realms/home/.well-known/openid-configuration
 - name: MINIO_IDENTITY_OPENID_CLIENT_ID
   value: minio
+- name: MINIO_IDENTITY_OPENID_CLIENT_SECRET
+  value: cad5f999-81e6-4791-afef-86ddd18ae3df
 ```
 
 If integrating with Keycloak the MinIO docs on this were pretty good, see
@@ -83,19 +115,6 @@ Keycloak.
 
 See the section further down in the README file for information on setting up a
 policy for authorization to MinIO resources using JWT with Keycloak.
-
-### Ingress Route
-
-My K3s cluster uses [Traefik v2] as the Kubernetes ingress controller and the
-`IngressRoute` resource it provides. You can just as easily use the standard
-Kubernetes `Ingress` resource, or other such ingress controller annotations or
-configuration methods.
-
-The `500-ingressroute.yaml` file specifies the usage of TLS and associated
-certificates. You should always use HTTPS when accessing resources, especially
-over the internet. You can update that file as necessary to work with your
-deployment, e.g. using a different Traefik endpoint and removing the `tls`
-section.
 
 ## MinIO Client
 
@@ -229,7 +248,7 @@ JWT that was provided during the OpenID Connect login. This is similar to the
 previous `readwriteusers` policy except that the user principal is identified by
 the `preferred_username` claim within the JWT.
 
-This policy is **not** set on the `users` group. MinIO will select and enforece
+This policy is **not** set on the `users` group. MinIO will select and enforce
 this policy based on the `readwriteusersjwt` name specified in the `policy`
 claim of the token.
 
@@ -294,7 +313,7 @@ authenticated it will retrieve "readwriteusersjwt" from the user's
 
 The below error in the Minio logs may be seen when failing to authenticate using
 JWT. This can mean that the `policy` claim is missing. Check to ensure that the
-`policy` Claim Mapping has been added to the cient in Keycloak. Check that this
+`policy` Claim Mapping has been added to the client in Keycloak. Check that this
 is mapped to a user attribute belonging to the user attempting to authenticate,
 and that the value of this attribute on the user matches the Minio policy name
 for the JWT policy, e.g. `readwriteusersjwt`.
@@ -349,6 +368,10 @@ aws:
 
 <https://github.com/grafana/loki/issues/1434>
 
+## License
+
+[![MIT license]](https://lbesson.mit-license.org/)
+
 [docker registry]: https://docs.docker.com/registry/
 [external hard drive for persistent storage]:
   https://github.com/sleighzy/raspberry-pi-k3s-homelab/blob/main/k3s.md#external-hard-drive-for-persistent-storage
@@ -358,7 +381,10 @@ aws:
 [local path provisioner]: https://rancher.com/docs/k3s/latest/en/storage/
 [minio]: https://min.io/
 [minio client (mc)]: https://docs.min.io/docs/minio-client-complete-guide.html
+[mit license]: https://img.shields.io/badge/License-MIT-blue.svg
 [raspberry-pi-k3s-homelab]:
   https://github.com/sleighzy/raspberry-pi-k3s-homelab/blob/main/k3s.md
 [restic]: https://restic.net/
 [traefik v2]: https://traefik.io/traefik/
+[v1.0.0 tag]:
+  https://github.com/sleighzy/k3s-minio-deployment/releases/tag/v1.0.0
