@@ -10,5 +10,8 @@ spec:
     - protocol: TCP
       name: minio
       port: 9000
+    - protocol: TCP
+      name: minio-console
+      port: 9001
   selector:
     app: minio
