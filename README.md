@@ -309,6 +309,13 @@ and the _Token Claim Name_ of "policy". This means that when the user is
 authenticated it will retrieve "readwriteusersjwt" from the user's
 "minio-policy" attribute and use it for the value of the "policy" token claim.
 
+### MinIO Console Administrator
+
+MinIO has a default policy named `consoleAdmin` which allows the user access to
+the administration features of the console. If authenticating as an
+administrative user via OpenID Connect you will need to add set `consoleAdmin`
+as the value for the `minio-policy` user attribute.
+
 ### Troubleshooting JWT Authorization
 
 The below error in the Minio logs may be seen when failing to authenticate using
