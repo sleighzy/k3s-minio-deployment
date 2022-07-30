@@ -28,7 +28,7 @@ spec:
                       - hdd
       containers:
         - name: minio
-          image: minio/minio:RELEASE.2021-10-27T16-29-42Z
+          image: minio/minio:RELEASE.2022-07-29T19-40-48Z
           args: ['server', '/data', '--console-address', ':9001']
           ports:
             - name: minio
